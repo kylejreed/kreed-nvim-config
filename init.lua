@@ -133,14 +133,11 @@ require('lazy').setup({
   },
   {
     'projekt0n/github-nvim-theme',
-    lazy = false,  -- make sure we load this during startup if it is your main colorscheme
+    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      require('github-theme').setup({
-        -- ...
-      })
-
-      vim.cmd('colorscheme github_dark')
+      require('github-theme').setup({})
+      -- vim.cmd('colorscheme github_dark')
     end,
   },
   {
@@ -148,10 +145,17 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
- --     vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'onedark'
     end,
   },
-
+  {
+    'AlexvZyl/nordic.nvim',
+    priority = 1000,
+    config = function()
+      require 'nordic'.load()
+      -- vim.cmd.colorscheme 'nordic'
+    end
+  },
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -326,9 +330,10 @@ vim.keymap.set('i', '<C-j>', '<Down>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-k>', '<Up>', { silent = true, noremap = true })
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
-vim.keymap.set('n', '<Tab>', ':bn <CR>')
-vim.keymap.set('n', '<S-Tab>', ':bp <CR>')
-vim.keymap.set('n', '<leader>x', ':bd <CR>')
+vim.keymap.set('n', '<Tab>', ':bn <CR>', { silent = true })
+vim.keymap.set('n', '<S-Tab>', ':bp <CR>', { silent = true })
+vim.keymap.set('n', '<leader>x', ':bd <CR>', { silent = true })
+vim.keymap.set('n', 'zz', ':let &scrolloff=999-&scrolloff<CR>')
 
 -- Run files
 vim.keymap.set('n', '<leader>rp', ':!python3 % <CR>')
