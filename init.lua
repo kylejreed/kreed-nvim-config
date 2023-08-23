@@ -159,7 +159,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'github_dark',
         component_separators = '|',
         section_separators = '',
       },
@@ -314,26 +314,28 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
-vim.keymap.set('n', ';', ':')
 vim.keymap.set('n', '<leader>q', ':q! <CR>')
-vim.keymap.set('n', '<leader>lf', ':Format <CR>')
+vim.keymap.set('n', '<leader>=', ':Format <CR>')
 vim.keymap.set('n', 'H', '^')
 vim.keymap.set('n', 'L', '$')
 vim.keymap.set('n', 'J', ':m+1 <CR>')
 vim.keymap.set('n', 'K', ':m-2 <CR>')
-vim.keymap.set('i', '<C-h>', '<Left>')
-vim.keymap.set('i', '<C-l>', '<Right>')
-vim.keymap.set('i', '<C-j>', '<Down>')
-vim.keymap.set('i', '<C-k>', '<Up>')
+vim.keymap.set('i', '<C-h>', '<Left>', { silent = true, noremap = true })
+vim.keymap.set('i', '<C-l>', '<Right>', { silent = true, noremap = true })
+vim.keymap.set('i', '<C-j>', '<Down>', { silent = true, noremap = true })
+vim.keymap.set('i', '<C-k>', '<Up>', { silent = true, noremap = true })
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set('n', '<Tab>', ':bn <CR>')
+vim.keymap.set('n', '<S-Tab>', ':bp <CR>')
+vim.keymap.set('n', '<leader>x', ':bd <CR>')
 
 -- Run files
 vim.keymap.set('n', '<leader>rp', ':!python3 % <CR>')
 
 -- Projects
 vim.keymap.set('n', '<leader>p', function() require('telescope').extensions.project.project {} end,
-  { desc = '[S]earch [P]rojects' })
+  { desc = '[P]rojects' })
 
 -- Terminal
 vim.keymap.set({ 'n', 't' }, '<C-\\>', function() require("nvterm.terminal").toggle("float") end,
