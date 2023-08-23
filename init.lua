@@ -389,7 +389,7 @@ require('telescope').setup {
   extensions = {
     project = {
       sync_with_nvim_tree = true,
-      base_dirs = { '~/Documents/code' },
+      base_dirs = { '~/Documents' },
       on_project_selected = function(prompt_bufnr)
         -- Do anything you want in here. For example:
         require("telescope._extensions.project.actions").change_working_directory(prompt_bufnr, true)
