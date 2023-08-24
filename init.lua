@@ -318,7 +318,9 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
-vim.keymap.set('n', '<leader>q', ':q! <CR>')
+vim.keymap.set('n', '<F5>', ':e! <CR>', { silent = true })
+vim.keymap.set('n', '<leader>q', ':q! <CR>', { silent = true })
+vim.keymap.set('n', '<leader>w', ':wa! <CR>')
 vim.keymap.set('n', '<leader>=', ':Format <CR>', { silent = true })
 vim.keymap.set('n', 'H', '^')
 vim.keymap.set('n', 'L', '$')
@@ -349,8 +351,8 @@ vim.keymap.set({ 'n', 't' }, '<C-\\>', function() require("nvterm.terminal").tog
   { noremap = true, silent = true })
 
 -- Save
-vim.keymap.set('n', '<C-s>', ':w <CR>')
-vim.keymap.set('i', '<C-s>', '<Esc> :w <CR>')
+vim.keymap.set('n', '<C-s>', ':wa <CR>')
+vim.keymap.set('i', '<C-s>', '<Esc> :wa <CR>')
 
 -- Escape Insert mode
 vim.keymap.set('i', 'jk', '<Esc>', { silent = true })
@@ -518,8 +520,8 @@ local on_attach = function(_, bufnr)
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap('<leader>ls', require('telescope.builtin').lsp_document_symbols, 'Document [S]ymbols')
+  nmap('<leader>lw', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace Symbols')
 
   -- See `:help K` for why this keymap
   nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
