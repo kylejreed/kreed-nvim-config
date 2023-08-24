@@ -145,7 +145,7 @@ require('lazy').setup({
     'navarasu/onedark.nvim',
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      -- vim.cmd.colorscheme 'onedark'
     end,
   },
   {
@@ -153,7 +153,7 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       require 'nordic'.load()
-      -- vim.cmd.colorscheme 'nordic'
+      vim.cmd.colorscheme 'nordic'
     end
   },
   {
@@ -319,17 +319,19 @@ vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 vim.keymap.set('n', '<leader>q', ':q! <CR>')
-vim.keymap.set('n', '<leader>=', ':Format <CR>')
+vim.keymap.set('n', '<leader>=', ':Format <CR>', { silent = true })
 vim.keymap.set('n', 'H', '^')
 vim.keymap.set('n', 'L', '$')
-vim.keymap.set('n', 'J', ':m+1 <CR>')
-vim.keymap.set('n', 'K', ':m-2 <CR>')
+vim.keymap.set('n', 'J', ':m+1 <CR>', { silent = true })
+vim.keymap.set('n', 'K', ':m-2 <CR>', { silent = true })
 vim.keymap.set('i', '<C-h>', '<Left>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-l>', '<Right>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-j>', '<Down>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-k>', '<Up>', { silent = true, noremap = true })
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', 'H', '^')
+vim.keymap.set('v', 'L', '$')
 vim.keymap.set('n', '<Tab>', ':bn <CR>', { silent = true })
 vim.keymap.set('n', '<S-Tab>', ':bp <CR>', { silent = true })
 vim.keymap.set('n', '<leader>x', ':bd <CR>', { silent = true })
