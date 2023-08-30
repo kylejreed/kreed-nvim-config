@@ -137,7 +137,7 @@ require('lazy').setup({
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       require('github-theme').setup({})
-      -- vim.cmd('colorscheme github_dark')
+      vim.cmd('colorscheme github_dark')
     end,
   },
   {
@@ -152,8 +152,8 @@ require('lazy').setup({
     'AlexvZyl/nordic.nvim',
     priority = 1000,
     config = function()
-      require 'nordic'.load()
-      vim.cmd.colorscheme 'nordic'
+      -- require 'nordic'.load()
+      -- vim.cmd.colorscheme 'nordic'
     end
   },
   {
@@ -283,6 +283,12 @@ require('lazy').setup({
 -- Set highlight on search
 vim.o.hlsearch = false
 
+-- Set scroll offset
+vim.o.scrolloff = 5
+
+-- Set relative line numbers
+vim.o.rnu = true
+
 -- Make line numbers default
 vim.wo.number = true
 
@@ -338,6 +344,7 @@ vim.keymap.set('n', '<Tab>', ':bn <CR>', { silent = true })
 vim.keymap.set('n', '<S-Tab>', ':bp <CR>', { silent = true })
 vim.keymap.set('n', '<leader>x', ':bd <CR>', { silent = true })
 vim.keymap.set('n', 'zz', ':let &scrolloff=999-&scrolloff<CR>')
+vim.keymap.set('n', '<leader>rel', ':set rnu! <CR>')
 
 -- Run files
 vim.keymap.set('n', '<leader>rp', ':!python3 % <CR>')
