@@ -260,6 +260,12 @@ require('lazy').setup({
     end,
   },
   { "jiangmiao/auto-pairs" },
+  {
+    "windwp/nvim-ts-autotag",
+    config = function()
+      require('nvim-ts-autotag').setup()
+    end
+  },
   { "nvim-telescope/telescope-project.nvim", },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
