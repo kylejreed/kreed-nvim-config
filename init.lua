@@ -137,7 +137,7 @@ require('lazy').setup({
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       require('github-theme').setup({})
-      vim.cmd('colorscheme github_dark')
+      -- vim.cmd('colorscheme github_dark')
     end,
   },
   {
@@ -153,7 +153,9 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       -- require 'nordic'.load()
-      -- vim.cmd.colorscheme 'nordic'
+      vim.cmd.colorscheme 'nordic'
+      vim.cmd("hi Visual guibg=#999999 gui=none")
+      vim.cmd("hi Search guibg=#a67163")
     end
   },
   {
@@ -263,7 +265,11 @@ require('lazy').setup({
   {
     "windwp/nvim-ts-autotag",
     config = function()
-      require('nvim-ts-autotag').setup()
+      require('nvim-ts-autotag').setup {
+        autotag = {
+          enable_close_on_slash = false
+        }
+      }
     end
   },
   { "nvim-telescope/telescope-project.nvim", },
@@ -286,14 +292,16 @@ require('lazy').setup({
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 
--- Set highlight on search
-vim.o.hlsearch = false
-
 -- Set scroll offset
 vim.o.scrolloff = 5
 
 -- Set relative line numbers
 vim.o.rnu = true
+
+-- Page setup
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+vim.o.shiftwidth = 2
 
 -- Make line numbers default
 vim.wo.number = true
@@ -351,6 +359,7 @@ vim.keymap.set('n', '<S-Tab>', ':bp <CR>', { silent = true })
 vim.keymap.set('n', '<leader>x', ':bd <CR>', { silent = true })
 vim.keymap.set('n', 'zz', ':let &scrolloff=999-&scrolloff<CR>')
 vim.keymap.set('n', '<leader>rel', ':set rnu! <CR>')
+vim.keymap.set('n', '<Esc>', ":noh <CR>", { silent = true })
 
 -- Run files
 vim.keymap.set('n', '<leader>rp', ':!python3 % <CR>')
@@ -507,7 +516,7 @@ require('nvim-treesitter.configs').setup {
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>j', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
