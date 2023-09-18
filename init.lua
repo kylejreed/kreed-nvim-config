@@ -249,6 +249,16 @@ require('lazy').setup({
     },
     config = function()
       require("nvim-tree").setup {
+        git = { enable = true },
+        renderer = {
+          highlight_git = true,
+          icons = {
+            show = {
+              git = true,
+            },
+          },
+        },
+        actions = { open_file = { quit_on_open = true } },
         on_attach = function(bufnr)
           local api = require "nvim-tree.api"
 
@@ -256,7 +266,13 @@ require('lazy').setup({
           api.config.mappings.default_on_attach(bufnr)
 
           -- custom mappings
-          vim.keymap.set('n', '<C-n>', api.tree.toggle)
+          vim.keymap.set('n', '<C-n>', function()
+            if (api.tree.is_visible()) then
+              api.tree.close()
+            else
+              api.tree.open({ find_file = true, focus = true })
+            end
+          end)
         end
       }
     end,
@@ -273,6 +289,10 @@ require('lazy').setup({
     end
   },
   { "nvim-telescope/telescope-project.nvim", },
+  { "prettier/vim-prettier" },
+  { "jose-elias-alvarez/null-ls.nvim" },
+  { "MunifTanjim/prettier.nvim" }
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -350,6 +370,7 @@ vim.keymap.set('i', '<C-h>', '<Left>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-l>', '<Right>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-j>', '<Down>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-k>', '<Up>', { silent = true, noremap = true })
+vim.keymap.set('i', '<C-e>', '<Esc>ldwi')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.keymap.set('v', 'H', '^')
@@ -370,6 +391,8 @@ vim.keymap.set('n', '<leader>p', function() require('telescope').extensions.proj
 
 -- Terminal
 vim.keymap.set({ 'n', 't' }, '<C-\\>', function() require("nvterm.terminal").toggle("float") end,
+  { noremap = true, silent = true })
+vim.keymap.set({ 'n', 't' }, '<C-|>', function() require("nvterm.terminal").toggle("horizontal") end,
   { noremap = true, silent = true })
 
 -- Save
@@ -659,6 +682,91 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+local null_ls = require("null-ls")
+
+local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+local event = "BufWritePre" -- or "BufWritePost"
+local async = event == "BufWritePost"
+
+null_ls.setup({
+  on_attach = function(client, bufnr)
+    if client.supports_method("textDocument/formatting") then
+      vim.keymap.set("n", "<Leader>=", function()
+        vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+      end, { buffer = bufnr, desc = "[lsp] format" })
+
+      -- format on save
+      vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+      vim.api.nvim_create_autocmd(event, {
+        buffer = bufnr,
+        group = group,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = bufnr, async = async })
+        end,
+        desc = "[lsp] format on save",
+      })
+    end
+
+    if client.supports_method("textDocument/rangeFormatting") then
+      vim.keymap.set("x", "<Leader>=", function()
+        vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+      end, { buffer = bufnr, desc = "[lsp] format" })
+    end
+  end
+})
+
+local prettier = require("prettier")
+
+prettier.setup({
+  bin = 'prettier', -- or `'prettierd'` (v0.23.3+)
+  filetypes = {
+    "css",
+    "graphql",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "less",
+    "markdown",
+    "scss",
+    "typescript",
+    "typescriptreact",
+    "yaml",
+  },
+  cli_options = {
+    arrow_parens = "avoid",
+    bracket_spacing = true,
+    bracket_same_line = true,
+    embedded_language_formatting = "auto",
+    end_of_line = "lf",
+    html_whitespace_sensitivity = "css",
+    -- jsx_bracket_same_line = false,
+    jsx_single_quote = false,
+    print_width = 150,
+    prose_wrap = "preserve",
+    quote_props = "as-needed",
+    semi = true,
+    single_attribute_per_line = false,
+    single_quote = false,
+    tab_width = 2,
+    trailing_comma = "es5",
+    use_tabs = false,
+  },
+  ["null-ls"] = {
+    condition = function()
+      return prettier.config_exists({
+        -- if `false`, skips checking `package.json` for `"prettier"` key
+        check_package_json = true,
+      })
+    end,
+    runtime_condition = function(params)
+      -- return false to skip running prettier
+      return true
+    end,
+    timeout = 5000,
+  }
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
