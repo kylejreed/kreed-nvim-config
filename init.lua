@@ -137,7 +137,7 @@ require('lazy').setup({
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       require('github-theme').setup({})
-      -- vim.cmd('colorscheme github_dark')
+      vim.cmd('colorscheme github_dark')
     end,
   },
   {
@@ -153,7 +153,7 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       -- require 'nordic'.load()
-      vim.cmd.colorscheme 'nordic'
+      -- vim.cmd.colorscheme 'nordic'
       vim.cmd("hi Visual guibg=#999999 gui=none")
       vim.cmd("hi Search guibg=#a67163")
     end
@@ -291,7 +291,13 @@ require('lazy').setup({
   { "nvim-telescope/telescope-project.nvim", },
   { "prettier/vim-prettier" },
   { "jose-elias-alvarez/null-ls.nvim" },
-  { "MunifTanjim/prettier.nvim" }
+  { "MunifTanjim/prettier.nvim" },
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "VeryLazy",
+    opts = {},
+    config = function(_, opts) require 'lsp_signature'.setup(opts) end
+  }
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -317,6 +323,8 @@ vim.o.scrolloff = 5
 
 -- Set relative line numbers
 vim.o.rnu = true
+
+vim.o.wrap = false
 
 -- Page setup
 vim.o.tabstop = 2
@@ -364,12 +372,9 @@ vim.keymap.set('n', '<leader>w', ':wa! <CR>')
 vim.keymap.set('n', '<leader>=', ':Format <CR>', { silent = true })
 vim.keymap.set('n', 'H', '^')
 vim.keymap.set('n', 'L', '$')
-vim.keymap.set('n', 'J', ':m+1 <CR>', { silent = true })
-vim.keymap.set('n', 'K', ':m-2 <CR>', { silent = true })
 vim.keymap.set('i', '<C-h>', '<Left>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-l>', '<Right>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-j>', '<Down>', { silent = true, noremap = true })
-vim.keymap.set('i', '<C-k>', '<Up>', { silent = true, noremap = true })
 vim.keymap.set('i', '<C-e>', '<Esc>ldwi')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
@@ -557,6 +562,13 @@ local on_attach = function(_, bufnr)
 
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
+  local imap = function(keys, func, desc)
+    if desc then
+      desc = 'LSP: ' .. desc
+    end
+
+    vim.keymap.set('i', keys, func, { buffer = bufnr, desc = desc })
+  end
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>a', vim.lsp.buf.code_action, 'Code [A]ction')
@@ -569,8 +581,9 @@ local on_attach = function(_, bufnr)
   nmap('<leader>lw', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace Symbols')
 
   -- See `:help K` for why this keymap
-  nmap('<leader>k', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  imap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
